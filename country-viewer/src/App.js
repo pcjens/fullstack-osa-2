@@ -7,7 +7,12 @@ const CountryDisplay = (props) => {
   if (countries.length > 10) {
     return (<p>too many matches, specify another filter</p>)
   } else if (countries.length > 1) {
-    const countryList = countries.map(country => <li key={country.name}>{country.name}</li>)
+    const countryList = countries
+          .map(country =>
+               <li key={country.name} onClick={props.selectCountry(country.name)}>
+               {country.name}
+               </li>
+              )
     return (
       <ul>
         {countryList}
@@ -51,6 +56,12 @@ class App extends React.Component {
     })
   }
 
+  selectCountry = (countryName) => () => {
+    this.setState({
+      countryName
+    })
+  }
+
   componentWillMount() {
     axios
       .get("https://restcountries.eu/rest/v2/all")
@@ -65,7 +76,7 @@ class App extends React.Component {
     const countries = this.state.countries
           .filter(country =>
                   this.state.countryName === '' ||
-                  country.name.toLowerCase().includes(this.state.countryName))
+                  country.name.toLowerCase().includes(this.state.countryName.toLowerCase()))
 
     return (
       <div>
@@ -73,7 +84,7 @@ class App extends React.Component {
                           value={this.state.countryName}
                           onChange={this.updateCountryName}
                           />
-        <CountryDisplay countries={countries}/>
+        <CountryDisplay countries={countries} selectCountry={this.selectCountry} />
       </div>
     );
   }
