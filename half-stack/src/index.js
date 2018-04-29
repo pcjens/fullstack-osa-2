@@ -19,24 +19,23 @@ const Osa = (props) => {
 }
 
 const Sisalto = (props) => {
-  const osa1 = props.osat[0]
-  const osa2 = props.osat[1]
-  const osa3 = props.osat[2]
+  const osat = props.osat.map((osa, i) => <Osa key={i} osa={osa}/>)
 
   return (
     <div>
-      <Osa osa={osa1} />
-      <Osa osa={osa2} />
-      <Osa osa={osa3} />
+      {osat}
     </div>
   )
 }
 
-const Yhteensa = (props) => {
-  const lkm = props.osat.reduce((acc, osa) => acc + osa.tehtavia, 0)
+const Kurssi = (props) => {
+  const kurssi = props.kurssi
 
   return (
-    <p>yhteensä {lkm} tehtävää</p>
+    <div>
+      <Otsikko name={kurssi.nimi} />
+      <Sisalto osat={kurssi.osat} />
+    </div>
   )
 }
 
@@ -46,24 +45,25 @@ const App = () => {
     osat: [
       {
         nimi: 'Reactin perusteet',
-        tehtavia: 10
+        tehtavia: 10,
+        id: 1
       },
       {
         nimi: 'Tiedonvälitys propseilla',
-        tehtavia: 7
+        tehtavia: 7,
+        id: 2
       },
       {
         nimi: 'Komponenttien tila',
-        tehtavia: 14
+        tehtavia: 14,
+        id: 3
       }
     ]
   }
 
   return (
     <div>
-      <Otsikko name={kurssi.nimi} />
-      <Sisalto osat={kurssi.osat} />
-      <Yhteensa osat={kurssi.osat} />
+      <Kurssi kurssi={kurssi} />
     </div>
   )
 }
