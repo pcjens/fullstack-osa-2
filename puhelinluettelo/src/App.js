@@ -25,8 +25,8 @@ class App extends React.Component {
     const newPerson = { name, number }
     personService
       .create(newPerson)
-      .then(response => this.setState((prevState) => {
-        const persons = prevState.persons.concat(response.data)
+      .then(person => this.setState((prevState) => {
+        const persons = prevState.persons.concat(person)
         return {
           persons,
           newName: '',
@@ -61,9 +61,9 @@ class App extends React.Component {
   componentWillMount() {
     personService
       .getAll()
-      .then(response => {
+      .then(persons => {
         this.setState({
-          persons: response.data
+          persons
         })
       })
   }
