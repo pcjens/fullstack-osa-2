@@ -19,12 +19,20 @@ class App extends React.Component {
 
   addPerson = (event) => {
     event.preventDefault()
-
-    const newPerson = {
-      name: this.state.newName
-    }
-
     this.setState((prevState) => {
+      const newName = prevState.newName
+
+      if (prevState.persons.map(person => person.name).includes(newName)) {
+        alert('Nimi "' + newName + '" löytyy jo puhelinluettelosta!')
+        return {
+          newName: ''
+        }
+      }
+
+      const newPerson = {
+        name: newName
+      }
+
       const persons = prevState.persons.concat(newPerson)
       return {
         persons,
