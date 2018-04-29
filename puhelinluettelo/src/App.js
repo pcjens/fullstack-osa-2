@@ -1,9 +1,10 @@
 import React from 'react'
-import axios from 'axios'
 
 import AddPersonForm from './components/AddPersonForm'
 import Filter from './components/Filter'
 import Person from './components/Person'
+
+import personService from './services/persons'
 
 class App extends React.Component {
   constructor(props) {
@@ -22,8 +23,8 @@ class App extends React.Component {
     }
 
     const newPerson = { name, number }
-    axios
-      .post('http://localhost:3001/persons', newPerson)
+    personService
+      .create(newPerson)
       .then(response => this.setState((prevState) => {
         const persons = prevState.persons.concat(response.data)
         return {
@@ -58,8 +59,8 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
         this.setState({
           persons: response.data
