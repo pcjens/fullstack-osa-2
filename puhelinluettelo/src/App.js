@@ -1,5 +1,7 @@
-import React from 'react';
-import AddPersonForm from './components/AddPersonForm';
+import React from 'react'
+import axios from 'axios'
+
+import AddPersonForm from './components/AddPersonForm'
 import Filter from './components/Filter'
 import Person from './components/Person'
 
@@ -7,34 +9,21 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [
-        { name: 'Arto Hellas', number: '040-123456' },
-        { name: 'Martti Tienari', number: '040-123456' },
-        { name: 'Arto Järvinen', number: '040-123456' },
-        { name: 'Lea Kutvonen', number: '040-123456' }
-      ],
+      persons: [],
       newName: '',
       newNumber: '',
       filter: ''
     }
   }
 
-  addPerson = (event) => {
-    event.preventDefault()
+  addPerson = (name, number, id) => {
+    if (this.state.persons.map(person => person.name).includes(name)) {
+      return false
+    }
+
+    const newPerson = { name, number, id }
+
     this.setState((prevState) => {
-      const newName = prevState.newName
-
-      if (prevState.persons.map(person => person.name).includes(newName)) {
-        alert('Nimi "' + newName + '" löytyy jo puhelinluettelosta!')
-        return {
-        }
-      }
-
-      const newPerson = {
-        name: newName,
-        number: prevState.newNumber
-      }
-
       const persons = prevState.persons.concat(newPerson)
       return {
         persons,
@@ -42,6 +31,16 @@ class App extends React.Component {
         newNumber: ''
       }
     })
+
+    return true
+  }
+
+  addPersonFormHandler = (event) => {
+    event.preventDefault()
+    const name = this.state.newName
+    if (!this.addPerson(name, this.state.newNumber)) {
+      alert('Nimi "' + name + '" löytyy jo puhelinluettelosta!')
+    }
   }
 
   updateNewName = (event) => {
@@ -56,6 +55,19 @@ class App extends React.Component {
     this.setState({ filter: event.target.value })
   }
 
+  componentWillMount() {
+    const addPerson = (name, number, id) => {
+      this.addPerson(name, number, id)
+    }
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        response.data.forEach(person => {
+          addPerson(person.name, person.number, person.id)
+        })
+      })
+  }
+
   render() {
     const persons = this.state.persons
           .filter(person =>
@@ -67,7 +79,7 @@ class App extends React.Component {
       <div>
         <h2>Puhelinluettelo</h2>
         <Filter filter={this.state.filter} updateFilter={this.updateFilter} />
-        <AddPersonForm addPerson={this.addPerson} name={this.state.newName} updateName={this.updateNewName} number={this.state.newNumber} updateNumber={this.updateNewNumber} />
+        <AddPersonForm addPerson={this.addPersonFormHandler} name={this.state.newName} updateName={this.updateNewName} number={this.state.newNumber} updateNumber={this.updateNewNumber} />
 
         <h2>Numerot</h2>
         <table>
