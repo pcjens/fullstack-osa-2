@@ -2,7 +2,7 @@ import React from 'react';
 
 const Person = (props) => {
   return (
-    <div>{props.name}</div>
+    <tr><td>{props.name}</td><td>{props.number}</td></tr>
   )
 }
 
@@ -11,9 +11,10 @@ class App extends React.Component {
     super(props)
     this.state = {
       persons: [
-        { name: 'Arto Hellas' }
+        { name: 'Arto Hellas', number: '040-123456' }
       ],
-      newName: ''
+      newName: '',
+      newNumber: ''
     }
   }
 
@@ -25,18 +26,19 @@ class App extends React.Component {
       if (prevState.persons.map(person => person.name).includes(newName)) {
         alert('Nimi "' + newName + '" löytyy jo puhelinluettelosta!')
         return {
-          newName: ''
         }
       }
 
       const newPerson = {
-        name: newName
+        name: newName,
+        number: prevState.newNumber
       }
 
       const persons = prevState.persons.concat(newPerson)
       return {
         persons,
-        newName: ''
+        newName: '',
+        newNumber: ''
       }
     })
   }
@@ -45,26 +47,39 @@ class App extends React.Component {
     this.setState({ newName: event.target.value })
   }
 
+  updateNewNumber = (event) => {
+    this.setState({ newNumber: event.target.value })
+  }
+
   render() {
-    const names = this.state.persons.map(person => <Person key={person.name} name={person.name} />)
+    const persons = this.state.persons.map(person => <Person key={person.name} name={person.name} number={person.number} />)
 
     return (
       <div>
         <h2>Puhelinluettelo</h2>
         <form onSubmit={this.addPerson}>
           <div>
-            nimi:
-            <input
-              value={this.state.newName}
-              onChange={this.updateNewName}
-              />
+            nimi: <input
+                    value={this.state.newName}
+                    onChange={this.updateNewName}
+                    />
+          </div>
+          <div>
+            numero: <input
+                      value={this.state.newNumber}
+                      onChange={this.updateNewNumber}
+                      />
           </div>
           <div>
             <button type="submit">lisää</button>
           </div>
         </form>
         <h2>Numerot</h2>
-        {names}
+        <table>
+          <tbody>
+            {persons}
+          </tbody>
+        </table>
       </div>
     )
   }
