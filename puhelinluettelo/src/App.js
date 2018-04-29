@@ -17,32 +17,32 @@ class App extends React.Component {
     }
   }
 
-  addPerson = (name, number) => {
-    if (this.state.persons.map(person => person.name).includes(name)) {
-      return false
-    }
-
-    const newPerson = { name, number }
-    personService
-      .create(newPerson)
-      .then(person => this.setState((prevState) => {
-        const persons = prevState.persons.concat(person)
-        return {
-          persons,
-          newName: '',
-          newNumber: ''
-        }
-      }))
-
-
-    return true
-  }
-
   addPersonFormHandler = (event) => {
     event.preventDefault()
     const name = this.state.newName
-    if (!this.addPerson(name, this.state.newNumber)) {
-      alert('Nimi "' + name + '" löytyy jo puhelinluettelosta!')
+    const number = this.state.newNumber
+    const newPerson = { name, number }
+    const addNewPerson = (update, id) => (person) => this.setState((prevState) => {
+      const persons = prevState.persons
+            .filter(person => !update || person.id !== id)
+            .concat(person)
+      return {
+        persons,
+        newName: '',
+        newNumber: ''
+      }
+    })
+
+    const index = this.state.persons.map(person => person.name).indexOf(name)
+    if (index !== -1 && window.confirm(`${name} on jo luettelossa, korvataanko vanha numero uudella?`)) {
+      const id = this.state.persons[index].id
+      personService
+        .update(id, newPerson)
+        .then(addNewPerson(true, id))
+    } else if (index === -1) {
+      personService
+        .create(newPerson)
+        .then(addNewPerson(false))
     }
   }
 
