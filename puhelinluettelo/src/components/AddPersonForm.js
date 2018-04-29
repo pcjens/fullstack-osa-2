@@ -1,12 +1,6 @@
 import React from 'react'
 
-const AddPersonForm = (props) => {
-  const addPerson = props.addPerson
-  const name = props.name
-  const updateName = props.updateName
-  const number = props.number
-  const updateNumber = props.updateNumber
-
+const AddPersonForm = ({ addPerson, name, updateName, number, updateNumber }) => {
   return (
     <div>
       <h2>Lisää uusi</h2>

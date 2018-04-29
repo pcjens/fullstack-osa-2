@@ -1,9 +1,6 @@
 import React from 'react'
 
-const Filter = (props) => {
-  const filter = props.filter
-  const updateFilter = props.updateFilter
-
+const Filter = ({ filter, updateFilter }) => {
   return(
     <div>
       rajaa näytettäviä: <input

@@ -1,0 +1,12 @@
+.notification {
+    border: 1px solid black;
+    padding: 0.5em;
+}
+
+.info {
+    background: #393;
+}
+
+.error {
+    background: #a55;
+}
