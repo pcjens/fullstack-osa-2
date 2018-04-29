@@ -28,6 +28,14 @@ const Sisalto = (props) => {
   )
 }
 
+const Yhteensa = (props) => {
+  const lkm = props.osat.map(osa => osa.tehtavia).reduce((acc, x) => acc + x)
+
+  return (
+    <p>yhteensa {lkm} tehtävää</p>
+  )
+}
+
 const Kurssi = (props) => {
   const kurssi = props.kurssi
 
@@ -35,6 +43,7 @@ const Kurssi = (props) => {
     <div>
       <Otsikko name={kurssi.nimi} />
       <Sisalto osat={kurssi.osat} />
+      <Yhteensa osat={kurssi.osat}/>
     </div>
   )
 }
@@ -57,6 +66,11 @@ const App = () => {
         nimi: 'Komponenttien tila',
         tehtavia: 14,
         id: 3
+      },
+      {
+        nimi: 'Redux',
+        tehtavia: 7,
+        id: 4
       }
     ]
   }
