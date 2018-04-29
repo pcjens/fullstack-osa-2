@@ -16,21 +16,23 @@ class App extends React.Component {
     }
   }
 
-  addPerson = (name, number, id) => {
+  addPerson = (name, number) => {
     if (this.state.persons.map(person => person.name).includes(name)) {
       return false
     }
 
-    const newPerson = { name, number, id }
+    const newPerson = { name, number }
+    axios
+      .post('http://localhost:3001/persons', newPerson)
+      .then(response => this.setState((prevState) => {
+        const persons = prevState.persons.concat(response.data)
+        return {
+          persons,
+          newName: '',
+          newNumber: ''
+        }
+      }))
 
-    this.setState((prevState) => {
-      const persons = prevState.persons.concat(newPerson)
-      return {
-        persons,
-        newName: '',
-        newNumber: ''
-      }
-    })
 
     return true
   }
@@ -56,14 +58,11 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    const addPerson = (name, number, id) => {
-      this.addPerson(name, number, id)
-    }
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
-        response.data.forEach(person => {
-          addPerson(person.name, person.number, person.id)
+        this.setState({
+          persons: response.data
         })
       })
   }
