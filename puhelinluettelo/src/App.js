@@ -46,6 +46,21 @@ class App extends React.Component {
     }
   }
 
+  removePersonFormHandler = (id, name) => (event) => {
+    event.preventDefault()
+    if (window.confirm(`Poistetaanko ${name} varmasti?`)) {
+      personService
+        .remove(id)
+        .then(data => {
+          this.setState(prevState => {
+            return {
+              persons: prevState.persons.filter(person => person.id !== id)
+            }
+          })
+        })
+    }
+  }
+
   updateNewName = (event) => {
     this.setState({ newName: event.target.value })
   }
@@ -73,7 +88,7 @@ class App extends React.Component {
           .filter(person =>
                   this.state.filter === '' ||
                   person.name.toLowerCase().includes(this.state.filter.toLowerCase()))
-          .map(person => <Person key={person.name} name={person.name} number={person.number} />)
+          .map(person => <Person key={person.id} name={person.name} number={person.number} removePerson={this.removePersonFormHandler(person.id, person.name)} />)
 
     return (
       <div>
